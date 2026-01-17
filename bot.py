@@ -1,58 +1,59 @@
 import telebot
 import os
+import logging
 
-# Ваш токен (уже вставлен)
-TOKEN = '8526430720:AAHHkrhBZyonFxdKXYrZ1vcYqZlMKFYzm3s'
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+TOKEN = os.environ.get('BOT_TOKEN', '8526430720:AAHHkrhBZyonFxdKXYrZ1vcYqZlMKFYzm3s')
 bot = telebot.TeleBot(TOKEN)
 
-# Ответ на команду /start
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    welcome_text = """
-    🇳🇱 *Hallo! Welkom bij Dutch Daily Bot!*
+    welcome = """
+🇳🇱 *Hallo! Welkom bij Dutch Daily Bot!*
 
-    Я помогу вам учить нидерландский язык каждый день.
+Ik draai op *Railway* 🚂
 
-    Доступные команды:
-    /start - это приветствие
-    /words - получить 5 новых слов на сегодня
-    /quiz - пройти мини-тест
-
-    Удачи! Veel succes! 😊
+Commando's:
+/start - dit bericht
+/words - 5 nieuwe woorden
+/test - bot status
     """
-    bot.reply_to(message, welcome_text, parse_mode='Markdown')
+    bot.reply_to(message, welcome, parse_mode='Markdown')
 
-# Команда для получения слов (пока тестовых)
+@bot.message_handler(commands=['test'])
+def test(message):
+    status = """
+🔄 *Bot Status*
+ID: `8526430720`
+📍 Host: Railway
+✅ Status: Online
+📊 Versie: 1.0
+    """
+    bot.reply_to(message, status, parse_mode='Markdown')
+
 @bot.message_handler(commands=['words'])
 def send_words(message):
-    words_list = """
-    *🎯 Ваши слова на сегодня:*
+    words = """
+🎯 *Je woorden voor vandaag:*
 
-    1. *de appel* - яблоко
-       *Пример:* Ik eet een appel. (Я ем яблоко.)
+1. *de appel* - яблоко
+   _Voorbeeld:_ Ik eet een appel.
 
-    2. *het boek* - книга
-       *Пример:* Dit boek is interessant. (Эта книга интересная.)
+2. *het boek* - книга  
+   _Voorbeeld:_ Dit boek is interessant.
 
-    3. *lopen* - идти
-       *Пример:* Wij lopen naar het park. (Мы идем в парк.)
-
-    4. *de hamer* - молоток
-       *Пример:* Geef mij de hamer. (Дай мне молоток.)
-
-    5. *zwanger* - беременная
-       *Пример:* Mijn zus is zwanger. (Моя сестра беременна.)
-
-    *📝 Повторите эти слова! Через час пришлю вам мини-тест.*
+3. *lopen* - идти
+   _Voorbeeld:_ Wij lopen naar het park.
     """
-    bot.reply_to(message, words_list, parse_mode='Markdown')
+    bot.reply_to(message, words, parse_mode='Markdown')
 
-# Просто эхо для теста
 @bot.message_handler(func=lambda message: True)
-def echo_all(message):
-    bot.reply_to(message, f"Вы написали: {message.text}")
+def echo(message):
+    bot.reply_to(message, f"Je schreef: {message.text}")
 
-# Запуск бота
 if __name__ == '__main__':
-    print("Бот запущен...")
+    logger.info("✅ Бот запущен на Railway!")
+    logger.info(f"Bot ID: {TOKEN.split(':')[0]}")
     bot.infinity_polling()
