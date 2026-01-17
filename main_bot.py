@@ -39,7 +39,7 @@ TOKEN = os.environ.get('BOT_TOKEN', '8526430720:AAHHkrhBZyonFxdKXYrZ1vcYqZlMKFYz
 bot = telebot.TeleBot(TOKEN)
 
 
-USER_ID = @dutch_daily_teacher_bot
+USER_ID = 6623026027
 
 # ========== БАЗА ДАННЫХ ==========
 def get_db():
